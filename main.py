@@ -12,6 +12,7 @@ def handle_error(func):
 
 class Game:
     def __init__(self):
+        random.shuffle(pieces_list)
         self.scores = 0
         self.time = 30
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="BitJigsaw", fps=60)
@@ -25,39 +26,40 @@ class Game:
                 return piece
             
     def is_piece_correct(self, rect) -> bool:
+        """Verifica se a peça está no grid correto."""
         if (not rect.piece is None and
             rect.piece.mov and
             rect.piece.dropped):
-                    
+            
             if rect.index == rect.piece.index:
                 return True
         return False
         
     def align_piece(self, rect):
+        """Centraliza a peça ao soltar em um grid."""
         # Centraliza a peça no rect grid
         rect.piece.x = (rect.x + rect.width / 2) - (rect.piece.width / 2)
         rect.piece.y = (rect.y + rect.height / 2) - (rect.piece.width / 2)
         
         match rect.index:
             case 0:
-                rect.piece.x +=2
-                rect.piece.y +=2
+                rect.piece.x += 2
+                rect.piece.y += 2
             case 2:
-                rect.piece.x -=2
-                rect.piece.y +=2
+                rect.piece.x -= 2
+                rect.piece.y += 2
             case 6:
-                rect.piece.x +=2
-                rect.piece.y -=2
+                rect.piece.x += 2
+                rect.piece.y -= 2
             case 8:
-                rect.piece.x -=2
-                rect.piece.y -=2
+                rect.piece.x -= 2
+                rect.piece.y -= 2
     
     @handle_error
     def update(self):
         """Método para verificação de interações a cada quadro."""
         # Verifica e atualiza os grids
-        
-        for index, rect in enumerate(rects_grid_list):
+        for index, rect in enumerate(grids_list):
             rect.index = index
             rect.update()
             
@@ -67,8 +69,7 @@ class Game:
                     rect.piece = piece
                     self.align_piece(rect)
 
-                
-            # encrementando pontos a cada acerto
+            # Incrementando pontos a cada acerto
             if self.is_piece_correct(rect):
                     self.scores += 1
                     self.align_piece(rect)
@@ -83,12 +84,11 @@ class Game:
         pyxel.rect(0, 0, SCREEN_WIDTH, 16, 12)
         pyxel.rect(0, 72, SCREEN_WIDTH, 28, 12)
         
-        CENTER = SCREEN_WIDTH //2
-        ICON_PIECE_POSX = SCREEN_WIDTH //2 - CENTER //2 + 1
-        ICON_TIMER_POSX = SCREEN_WIDTH //2 + CENTER //2 - 20
+        CENTER = SCREEN_WIDTH // 2
+        ICON_PIECE_POSX = SCREEN_WIDTH // 2 - CENTER // 2 + 1
+        ICON_TIMER_POSX = SCREEN_WIDTH // 2 + CENTER // 2 - 20
         pyxel.blt(ICON_PIECE_POSX, 1, 0, 0, 0, 10, 10, 12)
         pyxel.blt(ICON_TIMER_POSX, 1, 0, 10, 0, 10, 10, 12)
-        
         
         padx_scores = len(str(self.scores)) * 4 + 8
         padx_time = len(str(self.time)) * 4 + 4
@@ -103,7 +103,7 @@ class Game:
         self.HUD()
         
         # Desenha os grids
-        for rect in rects_grid_list:
+        for rect in grids_list:
             rect.draw()
         
         # Desenha as peças
