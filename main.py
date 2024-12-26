@@ -14,24 +14,26 @@ def handle_error(func):
 class Game:
     def __init__(self):
         self.play = False
-        self.timer_initial = None
+        self.elapsed_time = None
         self.timer = 0
         self.scores = 0
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="BitJigsaw", fps=60)
         pyxel.load("src/assets/BitJigsaw.pyxres")
         pyxel.run(self.update, self.draw)
     
+    def start_timer(self):
+        """Inicia o temporizador da partida."""
+        self.elapsed_time = int(time())
+    
     def update_timer(self):
         """Atualiza o temporizador para o fim da partida."""
-        if self.timer_initial is None:
-            self.timer_initial = gmtime()
+        if self.elapsed_time is None:
+            self.start_timer()
         else:
-            self.timer = gmtime().tm_sec - self.timer_initial.tm_sec
-            final_time = self.timer_initial.tm_sec + 15
-            if self.timer >= 0:
-                if self.timer >= final_time:
-                    self.play = False
-        
+            self.timer = int(time() - self.elapsed_time)
+            if self.timer >= 11:
+                self.play = False
+    
     def get_pressed_piece(self) -> Object:
         """Retorna a peça que está sendo pressionada no momento."""
         for piece in pieces_list:
