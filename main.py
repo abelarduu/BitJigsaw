@@ -1,4 +1,5 @@
 from src import *
+from time import *
 import pyxel
 
 def handle_error(func):
@@ -12,13 +13,25 @@ def handle_error(func):
 
 class Game:
     def __init__(self):
-        random.shuffle(pieces_list)
+        self.play = False
+        self.timer_initial = None
+        self.timer = 0
         self.scores = 0
-        self.time = 30
         pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="BitJigsaw", fps=60)
         pyxel.load("src/assets/BitJigsaw.pyxres")
         pyxel.run(self.update, self.draw)
     
+    def update_timer(self):
+        """Atualiza o temporizador para o fim da partida."""
+        if self.timer_initial is None:
+            self.timer_initial = gmtime()
+        else:
+            self.timer = gmtime().tm_sec - self.timer_initial.tm_sec
+            final_time = self.timer_initial.tm_sec + 15
+            if self.timer >= 0:
+                if self.timer >= final_time:
+                    self.play = False
+        
     def get_pressed_piece(self) -> Object:
         """Retorna a peça que está sendo pressionada no momento."""
         for piece in pieces_list:
@@ -34,7 +47,7 @@ class Game:
             if rect.index == rect.piece.index:
                 return True
         return False
-        
+    
     def align_piece(self, rect):
         """Centraliza a peça ao soltar em um grid."""
         # Centraliza a peça no rect grid
@@ -58,27 +71,34 @@ class Game:
     @handle_error
     def update(self):
         """Método para verificação de interações a cada quadro."""
-        # Verifica e atualiza os grids
-        for index, rect in enumerate(grids_list):
-            rect.index = index
-            rect.update()
+        if self.play:
+            self.update_timer()
             
-            piece = self.get_pressed_piece()
-            if not piece is None:
-                if (rect.mouse_up and piece.dragged):
-                    rect.piece = piece
-                    self.align_piece(rect)
+            # Verifica e atualiza os grids
+            for index, rect in enumerate(grids_list):
+                rect.index = index
+                rect.update()
+                
+                piece = self.get_pressed_piece()
+                if not piece is None:
+                    if (rect.mouse_up and piece.dragged):
+                        rect.piece = piece
+                        self.align_piece(rect)
 
-            # Incrementando pontos a cada acerto
-            if self.is_piece_correct(rect):
-                    self.scores += 1
-                    self.align_piece(rect)
-                    rect.piece.mov = False
+                # Incrementando pontos a cada acerto
+                if self.is_piece_correct(rect):
+                        self.scores += 1
+                        self.align_piece(rect)
+                        rect.piece.mov = False
 
-        # Verifica e atualiza as peças
-        for obj in pieces_list:
-            obj.update()
-            
+            # Verifica e atualiza as peças
+            for obj in pieces_list:
+                obj.update()
+        else:
+            if pyxel.btnr(pyxel.KEY_Q):
+                self.play = True
+        
+    
     def HUD(self):
         """Exibe a HUD na interface do game."""
         pyxel.rect(0, 0, SCREEN_WIDTH, 16, 12)
@@ -90,10 +110,11 @@ class Game:
         pyxel.blt(ICON_PIECE_POSX, 1, 0, 0, 0, 10, 10, 12)
         pyxel.blt(ICON_TIMER_POSX, 1, 0, 10, 0, 10, 10, 12)
         
-        padx_scores = len(str(self.scores)) * 4 + 8
-        padx_time = len(str(self.time)) * 4 + 4
-        pyxel.text(ICON_PIECE_POSX + padx_scores, 4, str(self.scores), 7)
-        pyxel.text(ICON_TIMER_POSX + padx_time, 4, str(self.time), 7)
+        if self.play:
+            padx_scores = len(str(self.scores)) * 4 + 8
+            padx_time = len(str(self.timer))/2 * 4 + 8
+            pyxel.text(ICON_PIECE_POSX + padx_scores, 4, str(self.scores), 7)
+            pyxel.text(ICON_TIMER_POSX + padx_time, 4, str(self.timer), 7)
 
     @handle_error
     def draw(self):
