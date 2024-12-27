@@ -30,8 +30,13 @@ class Game:
         if self.elapsed_time is None:
             self.start_timer()
         else:
-            self.timer = int(time() - self.elapsed_time)
-            if self.timer >= 11:
+            # Timer recebe o tempo corrido (0 - 10)
+            # self.Timer recebe o timer na ordem decrescente (10 - 0)
+            timer = int(time() - self.elapsed_time)
+            self.timer = 10 - timer
+            
+            # Timer zerado / fim da partida 
+            if self.timer <= 0:
                 self.play = False
     
     def get_pressed_piece(self) -> Object:
@@ -99,7 +104,6 @@ class Game:
         else:
             if pyxel.btnr(pyxel.KEY_Q):
                 self.play = True
-        
     
     def HUD(self):
         """Exibe a HUD na interface do game."""
