@@ -85,7 +85,7 @@ class Game:
             for index, rect in enumerate(grids_list):
                 rect.index = index
                 rect.update()
-                
+                 
                 piece = self.get_pressed_piece()
                 if not piece is None:
                     if (rect.mouse_up and piece.dragged):
@@ -101,41 +101,48 @@ class Game:
             # Verifica e atualiza as peças
             for obj in pieces_list:
                 obj.update()
+                
+        # Menu Inicial
         else:
-            if pyxel.btnr(pyxel.KEY_Q):
+            #Verificação para inicialização do game
+            if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
                 self.play = True
     
     def HUD(self):
         """Exibe a HUD na interface do game."""
-        pyxel.rect(0, 0, SCREEN_WIDTH, 16, 12)
-        pyxel.rect(0, 72, SCREEN_WIDTH, 28, 12)
-        
-        CENTER = SCREEN_WIDTH // 2
-        ICON_PIECE_POSX = SCREEN_WIDTH // 2 - CENTER // 2 + 1
-        ICON_TIMER_POSX = SCREEN_WIDTH // 2 + CENTER // 2 - 20
-        pyxel.blt(ICON_PIECE_POSX, 1, 0, 0, 0, 10, 10, 12)
-        pyxel.blt(ICON_TIMER_POSX, 1, 0, 10, 0, 10, 10, 12)
-        
         if self.play:
+            CENTER = SCREEN_WIDTH // 2
+            ICON_PIECE_POSX = SCREEN_WIDTH // 2 - CENTER // 2 + 1
+            ICON_TIMER_POSX = SCREEN_WIDTH // 2 + CENTER // 2 - 20
+            pyxel.blt(ICON_PIECE_POSX, 1, 0, 48, 0, 10, 10, 15)
+            pyxel.blt(ICON_TIMER_POSX, 1, 0, 58, 0, 10, 10, 15)
+        
             padx_scores = len(str(self.scores)) * 4 + 8
             padx_time = len(str(self.timer))/2 * 4 + 8
             pyxel.text(ICON_PIECE_POSX + padx_scores, 4, str(self.scores), 7)
             pyxel.text(ICON_TIMER_POSX + padx_time, 4, str(self.timer), 7)
-
+        
     @handle_error
     def draw(self):
         """Método para atualização da tela a cada quadro."""
         pyxel.cls(6)
         pyxel.mouse(True)
-        self.HUD()
+        pyxel.rect(0, 0, SCREEN_WIDTH, 16, 12)
+        pyxel.rect(0, 72, SCREEN_WIDTH, 28, 12)
+
+        if self.play:
+            self.HUD()
+            # Desenha os grids
+            for rect in grids_list:
+                rect.draw() 
+            
+            # Desenha as peças
+            for obj in pieces_list:
+                obj.draw()
         
-        # Desenha os grids
-        for rect in grids_list:
-            rect.draw()
-        
-        # Desenha as peças
-        for obj in pieces_list:
-            obj.draw()
+        # Menu inicial
+        else:
+            pyxel.blt(SCREEN_WIDTH/2 - 48/2, SCREEN_HEIGHT/2 - 48/2 -6, 0, 0, 0, 48, 48, 15)
 
 if __name__ == "__main__":
     Game()
