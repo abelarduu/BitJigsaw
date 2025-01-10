@@ -13,14 +13,25 @@ def handle_error(func):
 
 class Game:
     def __init__(self):
+        self.reset()
+        pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="BitJigsaw", fps=60)
+        pyxel.load("src/assets/BitJigsaw.pyxres")
+        pyxel.run(self.update, self.draw)
+        
+    def reset(self):
         self.play = False
         self.elapsed_time = None
         self.timer = 0
         self.scores = 0
-        pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="BitJigsaw", fps=60)
-        pyxel.load("src/assets/BitJigsaw.pyxres")
-        pyxel.run(self.update, self.draw)
-    
+        object_selected = False
+        
+        # Limpa as listas de peças e grids
+        pieces_list.clear()
+        grids_list.clear()
+        # Recria as listas
+        pieces_list.extend(create_pieces())
+        grids_list.extend(create_grids())
+            
     def start_timer(self):
         """Inicia o temporizador da partida."""
         self.elapsed_time = int(time())
@@ -37,7 +48,7 @@ class Game:
             
             # Timer zerado / fim da partida 
             if self.timer <= 0:
-                self.play = False
+                self.reset()
     
     def get_pressed_piece(self) -> Object:
         """Retorna a peça que está sendo pressionada no momento."""
@@ -127,8 +138,8 @@ class Game:
         """Método para atualização da tela a cada quadro."""
         pyxel.cls(6)
         pyxel.mouse(True)
-        pyxel.rect(0, 0, SCREEN_WIDTH, 16, 12)
-        pyxel.rect(0, 72, SCREEN_WIDTH, 28, 12)
+        pyxel.rect(0, 0, SCREEN_WIDTH, 16, 2)
+        pyxel.rect(0, 72, SCREEN_WIDTH, 28, 3)
 
         if self.play:
             self.HUD()
@@ -142,7 +153,12 @@ class Game:
         
         # Menu inicial
         else:
-            pyxel.blt(SCREEN_WIDTH/2 - 48/2, SCREEN_HEIGHT/2 - 48/2 -6, 0, 0, 0, 48, 48, 15)
+            TXT = "Press Start"
+            TXT_CENTER_X = len(TXT)/2 * pyxel.FONT_WIDTH
+            ICON_CENTER_Y = SCREEN_HEIGHT/2 - 48/2
+            ICON_CENTER_X = SCREEN_WIDTH/2 - 48/2
+            pyxel.blt(ICON_CENTER_X, ICON_CENTER_Y -6, 0, 0, 0, 48, 48, 15)
+            pyxel.text(SCREEN_HEIGHT/2 - TXT_CENTER_X +1 , SCREEN_HEIGHT - 17, TXT ,pyxel.frame_count % 16)
 
 if __name__ == "__main__":
     Game()

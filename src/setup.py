@@ -21,7 +21,7 @@ def create_pieces() -> list:
         Object(0, 74, 0, 0, 40, 22, 22),
         Object(0, 74, 0, 22, 44, 18, 18),
         Object(0, 74, 0, 40, 40, 22, 22)]
-              
+      
     # Adicionando index de cada peça
     # Embaralha a lista de peças
     update_index(pieces)
