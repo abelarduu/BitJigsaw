@@ -1,7 +1,6 @@
 <div align="center">
+<img src="img/logo.png" type="image/png" alt="Gameplay" width=370px>
 
-# BitJigsaw
- 
 ### Sobre o projeto
 Mini quebra-cabeça simples em pixel art criado através da linguagem python, utilizando a interface gráfica da game engine Pyxel.
  
