@@ -35,7 +35,7 @@ def create_pieces() -> list:
 def create_grids() -> list:
     """ Gera e retorna uma lista de grids."""
     CENTER_POSITION_X = SCREEN_WIDTH // 3.8
-    CENTER_POSITION_Y = SCREEN_HEIGHT // 5
+    CENTER_POSITION_Y = SCREEN_HEIGHT/2 - 23
     
     grids = []
     # Gerando Grid 3x3

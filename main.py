@@ -1,5 +1,5 @@
 from src import *
-from time import *
+from time import time
 import pyxel
 
 def handle_error(func):
@@ -125,8 +125,8 @@ class Game:
             CENTER = SCREEN_WIDTH // 2
             ICON_PIECE_POSX = SCREEN_WIDTH // 2 - CENTER // 2 + 1
             ICON_TIMER_POSX = SCREEN_WIDTH // 2 + CENTER // 2 - 20
-            pyxel.blt(ICON_PIECE_POSX, 1, 0, 48, 0, 10, 10, 15)
-            pyxel.blt(ICON_TIMER_POSX, 1, 0, 58, 0, 10, 10, 15)
+            pyxel.blt(ICON_PIECE_POSX, 3, 0, 47, 21, 10, 10, 15)
+            pyxel.blt(ICON_TIMER_POSX, 3, 0, 58, 21, 10, 10, 15)
         
             padx_scores = len(str(self.scores)) * 4 + 8
             padx_time = len(str(self.timer))/2 * 4 + 8
@@ -136,10 +136,10 @@ class Game:
     @handle_error
     def draw(self):
         """Método para atualização da tela a cada quadro."""
-        pyxel.cls(6)
+        pyxel.cls(12)
         pyxel.mouse(True)
-        pyxel.rect(0, 0, SCREEN_WIDTH, 16, 2)
-        pyxel.rect(0, 72, SCREEN_WIDTH, 28, 3)
+        pyxel.blt(0, 0, 0, 0, 0, 100, 20, 15)
+        pyxel.blt(0, SCREEN_HEIGHT - 20, 0, 0, 0, 100, -20, 15)
 
         if self.play:
             self.HUD()
@@ -155,10 +155,10 @@ class Game:
         else:
             TXT = "Press Start"
             TXT_CENTER_X = len(TXT)/2 * pyxel.FONT_WIDTH
-            ICON_CENTER_Y = SCREEN_HEIGHT/2 - 48/2
-            ICON_CENTER_X = SCREEN_WIDTH/2 - 48/2
-            pyxel.blt(ICON_CENTER_X, ICON_CENTER_Y -6, 0, 0, 0, 48, 48, 15)
-            pyxel.text(SCREEN_HEIGHT/2 - TXT_CENTER_X +1 , SCREEN_HEIGHT - 17, TXT ,pyxel.frame_count % 16)
+            ICON_CENTER_Y = SCREEN_HEIGHT/2 - 46/2
+            ICON_CENTER_X = SCREEN_WIDTH/2 - 46/2
+            pyxel.blt(ICON_CENTER_X, ICON_CENTER_Y, 0, 0, 21, 46, 46, 15)
+            pyxel.text(SCREEN_HEIGHT/2 - TXT_CENTER_X +1 , ICON_CENTER_Y + 47, TXT ,pyxel.frame_count % 16)
 
 if __name__ == "__main__":
     Game()
