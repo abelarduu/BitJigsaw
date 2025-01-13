@@ -44,11 +44,9 @@ class Game:
             # Timer recebe o tempo corrido (0 - 10)
             # self.Timer recebe o timer na ordem decrescente (10 - 0)
             timer = int(time() - self.elapsed_time)
-            self.timer = 10 - timer
+            if timer <= 10:
+                self.timer = 10 - timer
             
-            # Timer zerado / fim da partida 
-            if self.timer <= 0:
-                self.reset()
     
     def get_pressed_piece(self) -> Object:
         """Retorna a peça que está sendo pressionada no momento."""
@@ -90,7 +88,19 @@ class Game:
     def update(self):
         """Método para verificação de interações a cada quadro."""
         if self.play:
-            self.update_timer()
+            if self.scores == 9:
+                # Retorno ao menu inicial
+                if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
+                   self.reset()
+                    
+            else:
+                # Atualiza o Timer a cada quadro
+                # Se o Timer zerar: fim da partida 
+                self.update_timer()
+                if self.timer <= 0:
+                    # Retorno ao menu inicial
+                    if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
+                        self.reset()
             
             # Verifica e atualiza os grids
             for index, rect in enumerate(grids_list):
@@ -108,7 +118,7 @@ class Game:
                         self.scores += 1
                         self.align_piece(rect)
                         rect.piece.mov = False
-
+                        
             # Verifica e atualiza as peças
             for obj in pieces_list:
                 obj.update()
@@ -150,6 +160,21 @@ class Game:
             # Desenha as peças
             for obj in pieces_list:
                 obj.draw()
+                
+            if self.scores == 9:
+                TXT = "Jigsaw Completed!"
+                PADX = len(TXT)/2 * pyxel.FONT_WIDTH
+                TXT_POSX = SCREEN_WIDTH/2 - PADX
+                TXT_POSY = SCREEN_HEIGHT/2
+                pyxel.text( TXT_POSX, 20, str(TXT), pyxel.frame_count % 16)
+                
+            else:
+                if self.timer <= 0:
+                    TXT = "Jigsaw Incomplete!"
+                    PADX = len(TXT)/2 * pyxel.FONT_WIDTH
+                    TXT_POSX = SCREEN_WIDTH/2 - PADX
+                    TXT_POSY = SCREEN_HEIGHT/2
+                    pyxel.text( TXT_POSX, 20, str(TXT), pyxel.frame_count % 7)
         
         # Menu inicial
         else:
