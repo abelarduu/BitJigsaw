@@ -129,9 +129,9 @@ class Game:
             pyxel.blt(ICON_TIMER_POSX, 3, 0, 58, 21, 10, 10, 15)
         
             padx_scores = len(str(self.scores)) * 4 + 8
-            padx_time = len(str(self.timer))/2 * 4 + 8
-            pyxel.text(ICON_PIECE_POSX + padx_scores, 4, str(self.scores), 7)
-            pyxel.text(ICON_TIMER_POSX + padx_time, 4, str(self.timer), 7)
+            padx_time = len(str(self.timer))/2 * 4 + 10
+            pyxel.text(ICON_PIECE_POSX + padx_scores, 5, str(self.scores), 7)
+            pyxel.text(ICON_TIMER_POSX + padx_time, 5, str(self.timer), 7)
         
     @handle_error
     def draw(self):
@@ -145,7 +145,7 @@ class Game:
             self.HUD()
             # Desenha os grids
             for rect in grids_list:
-                rect.draw() 
+                rect.draw()
             
             # Desenha as peças
             for obj in pieces_list:
