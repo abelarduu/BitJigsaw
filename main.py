@@ -47,7 +47,6 @@ class Game:
             if timer <= 10:
                 self.timer = 10 - timer
             
-    
     def get_pressed_piece(self) -> Object:
         """Retorna a peça que está sendo pressionada no momento."""
         for piece in pieces_list:
@@ -61,6 +60,7 @@ class Game:
             rect.piece.dropped):
             
             if rect.index == rect.piece.index:
+                pyxel.play(0, 0)
                 return True
         return False
     
@@ -127,6 +127,7 @@ class Game:
         else:
             #Verificação para inicialização do game
             if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
+                pyxel.play(0, 0)
                 self.play = True
     
     def HUD(self):
